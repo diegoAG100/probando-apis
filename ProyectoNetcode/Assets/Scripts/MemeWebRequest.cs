@@ -10,17 +10,21 @@ public class MemeWebRequest : MonoBehaviour
     Meme meme1;
     Meme meme2;
 
-    public Image _EventTexture;
+    public Image imageMeme1;
+    public Image imageMeme2;
 
     void Start()
     {
         // https://imgflip.com/api
-        StartCoroutine(GetRequest("https://meme-api.com/gimme"));
+        StartCoroutine(GetRequest("https://meme-api.com/gimme",meme1,imageMeme1));
 
+        StartCoroutine(GetRequest("https://meme-api.com/gimme",meme2,imageMeme2));
     }
 
-    IEnumerator GetRequest(string uri)
+    IEnumerator GetRequest(string uri,Meme meme,Image imageMeme)
     {
+        
+        yield return new WaitForSeconds(UnityEngine.Random.Range(0f,1f));
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             // Request and wait for the desired page.
@@ -41,23 +45,23 @@ public class MemeWebRequest : MonoBehaviour
                 case UnityWebRequest.Result.Success:
                     Debug.Log(webRequest.downloadHandler.text);
 
-                    JsonToResult(webRequest.downloadHandler.text);
+                    meme = JsonToResult(webRequest.downloadHandler.text);
 
-                    StartCoroutine(GetTexture());
+                    StartCoroutine(GetTexture(meme,imageMeme));
 
                     break;
             }
         }
     }
 
-    private void JsonToResult(string json){
-        meme1 = JsonUtility.FromJson<Meme>(json);
-        Debug.Log(meme1.url);
+    private Meme JsonToResult(string json){
+        
+        return JsonUtility.FromJson<Meme>(json);
     }
 
-    IEnumerator GetTexture()
+    IEnumerator GetTexture(Meme meme,Image imageMeme)
     {
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(meme1.url);
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(meme.url);
 
         yield return www.SendWebRequest();
 
@@ -75,7 +79,7 @@ public class MemeWebRequest : MonoBehaviour
             var material = new Material(Shader.Find("UI/Default"));
             material.mainTexture = myTexture;
 
-            _EventTexture.material = material;
+            imageMeme.material = material;
         }
     }
 
