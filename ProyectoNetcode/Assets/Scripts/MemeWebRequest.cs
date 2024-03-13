@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -7,24 +9,21 @@ using UnityEngine.UI;
 public class MemeWebRequest : MonoBehaviour
 {
 
-    Meme meme1;
-    Meme meme2;
+    private Memes memes;
 
-    public Image imageMeme1;
-    public Image imageMeme2;
+    public List<Image> imageMemeArray;
 
     void Start()
     {
-        // https://imgflip.com/api
-        StartCoroutine(GetRequest("https://meme-api.com/gimme",meme1,imageMeme1));
-
-        StartCoroutine(GetRequest("https://meme-api.com/gimme",meme2,imageMeme2));
+        ApiCall();
     }
 
-    IEnumerator GetRequest(string uri,Meme meme,Image imageMeme)
+    public void ApiCall(){
+        StartCoroutine(GetRequest("https://meme-api.com/gimme/2"));
+    }
+
+    IEnumerator GetRequest(string uri)
     {
-        
-        yield return new WaitForSeconds(UnityEngine.Random.Range(0f,1f));
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             // Request and wait for the desired page.
@@ -45,44 +44,65 @@ public class MemeWebRequest : MonoBehaviour
                 case UnityWebRequest.Result.Success:
                     Debug.Log(webRequest.downloadHandler.text);
 
-                    meme = JsonToResult(webRequest.downloadHandler.text);
+                    memes = JsonToResult(webRequest.downloadHandler.text);
 
-                    StartCoroutine(GetTexture(meme,imageMeme));
+                    Debug.Log(webRequest.downloadHandler.text);
+
+                    StartCoroutine(GetTextures());
 
                     break;
             }
+            webRequest.Dispose();
         }
     }
 
-    private Meme JsonToResult(string json){
+    private Memes JsonToResult(string json){
         
-        return JsonUtility.FromJson<Meme>(json);
+        return JsonUtility.FromJson<Memes>(json);
     }
 
-    IEnumerator GetTexture(Meme meme,Image imageMeme)
+    IEnumerator GetTextures()
     {
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(meme.url);
+        
+        foreach(Meme meme in memes.memes){
+            UnityWebRequest www;
+            if(meme.url.Reverse().Take(3)=="gif"){
+            string imageUrl = meme.url.Replace("gif","jpg");
+            www = UnityWebRequestTexture.GetTexture(meme.url);
+            }
+            else{
+            www = UnityWebRequestTexture.GetTexture(meme.url);
+            }
 
-        yield return www.SendWebRequest();
+            yield return www.SendWebRequest();
 
 
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            if (www.isNetworkError || www.isHttpError)
+            {
+               Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(meme.url+" "+memes.memes.Count+" "+ imageMemeArray.Count);
+                Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
             
-            //Sprite.Create(myTexture,new Rect(0,0,myTexture.width,myTexture.height),Vector2.zero)
+             //Sprite.Create(myTexture,new Rect(0,0,myTexture.width,myTexture.height),Vector2.zero)
 
             var material = new Material(Shader.Find("UI/Default"));
             material.mainTexture = myTexture;
 
-            imageMeme.material = material;
+            imageMemeArray[memes.memes.IndexOf(meme)].material = material;
+            www.Dispose();
+            }
+
         }
     }
 
+}
+
+[Serializable] public class Memes{
+    public string count;
+    public List<Meme> memes;
 }
 
 [Serializable] public class Meme{
