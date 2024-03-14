@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 125697962}
   - component: {fileID: 125697961}
   - component: {fileID: 125697960}
+  - component: {fileID: 125697963}
   m_Layer: 5
   m_Name: Button (Legacy) (1)
   m_TagString: Untagged
@@ -187,7 +188,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -209,6 +210,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2019897966}
         m_TargetAssemblyTypeName: MemeWebRequest, Assembly-CSharp
         m_MethodName: ApiCall
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 125697963}
+        m_TargetAssemblyTypeName: ButtonCooldown, Assembly-CSharp
+        m_MethodName: StartCooldown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -256,6 +269,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125697958}
   m_CullTransparentMesh: 1
+--- !u!114 &125697963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125697958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f72efe9ab4f0f448baad86cfbcc7a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttons:
+  - {fileID: 1092182297}
+  - {fileID: 125697960}
 --- !u!1 &239648273
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,6 +796,7 @@ GameObject:
   - component: {fileID: 1092182299}
   - component: {fileID: 1092182298}
   - component: {fileID: 1092182297}
+  - component: {fileID: 1092182300}
   m_Layer: 5
   m_Name: Button (Legacy)
   m_TagString: Untagged
@@ -851,6 +880,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1092182300}
+        m_TargetAssemblyTypeName: ButtonCooldown, Assembly-CSharp
+        m_MethodName: StartCooldown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1092182298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,6 +930,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092182295}
   m_CullTransparentMesh: 1
+--- !u!114 &1092182300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092182295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f72efe9ab4f0f448baad86cfbcc7a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttons:
+  - {fileID: 1092182297}
+  - {fileID: 125697960}
 --- !u!1 &1113021331
 GameObject:
   m_ObjectHideFlags: 0

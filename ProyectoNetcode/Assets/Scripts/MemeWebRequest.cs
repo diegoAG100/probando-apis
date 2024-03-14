@@ -19,6 +19,7 @@ public class MemeWebRequest : MonoBehaviour
     }
 
     public void ApiCall(){
+        StopAllCoroutines();
         StartCoroutine(GetRequest("https://meme-api.com/gimme/2"));
     }
 
@@ -46,8 +47,14 @@ public class MemeWebRequest : MonoBehaviour
 
                     memes = JsonToResult(webRequest.downloadHandler.text);
 
+                    //Comprobamos is tiene un gif, si lo tiene volvemos a llamar a la api
+                    foreach(Meme meme in memes.memes){
+                        if(meme.url.Contains(".gif")){
+                            ApiCall();
+                            break;
+                        }
+                    }
                     Debug.Log(webRequest.downloadHandler.text);
-
                     StartCoroutine(GetTextures());
 
                     break;
@@ -66,20 +73,14 @@ public class MemeWebRequest : MonoBehaviour
         
         foreach(Meme meme in memes.memes){
             UnityWebRequest www;
-            if(meme.url.Reverse().Take(3)=="gif"){
-            string imageUrl = meme.url.Replace("gif","jpg");
             www = UnityWebRequestTexture.GetTexture(meme.url);
-            }
-            else{
-            www = UnityWebRequestTexture.GetTexture(meme.url);
-            }
 
             yield return www.SendWebRequest();
 
 
             if (www.isNetworkError || www.isHttpError)
             {
-               Debug.Log(www.error);
+                Debug.Log(www.error);
             }
             else
             {
@@ -88,11 +89,17 @@ public class MemeWebRequest : MonoBehaviour
             
              //Sprite.Create(myTexture,new Rect(0,0,myTexture.width,myTexture.height),Vector2.zero)
 
-            var material = new Material(Shader.Find("UI/Default"));
-            material.mainTexture = myTexture;
+                var material = new Material(Shader.Find("UI/Default"));
+                material.mainTexture = myTexture;
+                
+                int index = memes.memes.IndexOf(meme);
+                
+                if(index<0){
+                    index*=-1;
+                }
 
-            imageMemeArray[memes.memes.IndexOf(meme)].material = material;
-            www.Dispose();
+                imageMemeArray[index].material = material;
+                www.Dispose();
             }
 
         }
