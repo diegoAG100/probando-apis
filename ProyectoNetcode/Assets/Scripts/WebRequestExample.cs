@@ -49,16 +49,4 @@ public class WebRequestExample : MonoBehaviour
     }
 }
 
-[Serializable] public class Questions{
-    public int response_code;
-    public List<Question> results;
-}
 
-[Serializable] public class Question{
-    public string type;
-    public string difficulty;
-    public string category;
-    public string question;
-    public string correct_answer;
-    public string incorrect_answers; 
-}
