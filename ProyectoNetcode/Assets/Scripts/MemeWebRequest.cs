@@ -1,17 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class MemeWebRequest : MonoBehaviour
 {
 
     private Memes memes;
 
-    public List<Image> imageMemeArray;
+    public List<UnityEngine.UI.Image> imageMemeArray;
+    public Dropdown dropdown;
+    private string subReddit;
 
     void Start()
     {
@@ -20,7 +22,18 @@ public class MemeWebRequest : MonoBehaviour
 
     public void ApiCall(){
         StopAllCoroutines();
-        StartCoroutine(GetRequest("https://meme-api.com/gimme/2"));
+        StartCoroutine(GetRequest("https://meme-api.com/gimme"+subReddit+"/2"));
+    }
+
+    private void CheckSubredit(){
+        string valueDropdown = dropdown.options[dropdown.value].text;
+        if(valueDropdown!="aleatorio"){
+            subReddit = "/"+valueDropdown; 
+        }
+        else{
+            subReddit = "";
+        }
+
     }
 
     IEnumerator GetRequest(string uri)
@@ -89,7 +102,7 @@ public class MemeWebRequest : MonoBehaviour
             
              //Sprite.Create(myTexture,new Rect(0,0,myTexture.width,myTexture.height),Vector2.zero)
 
-                var material = new Material(Shader.Find("UI/Default"));
+                Material material = new Material(Shader.Find("UI/Default"));
                 material.mainTexture = myTexture;
                 
                 int index = memes.memes.IndexOf(meme);
